@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>netPlus — Network+ N10-009</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   netPlus  ·  APP_VERSION 0.3.1
+   Palette is taken from the T568B twisted-pair colour code —
+   blue, orange, green, brown — the wiring standard this course
+   spends Module 1 teaching. Layout is a plan-set: measured
+   rules, mono callouts, a layer spine down the side.
+   ============================================================ */
+:root{
+  --ink:#131A22; --ink-2:#33414F; --ink-3:#66757F;
+  --paper:#E4E9EC; --card:#F5F7F8; --sunk:#DCE2E6;
+  --rule:#C0CAD1; --rule-2:#9FADB6;
+
+  --blue:#2E5E8E; --orange:#C9691A; --green:#2C7A4B;
+  --brown:#7A5334; --flag:#A93226; --gold:#B08403;
+
+  --ok:#2C7A4B; --no:#A93226;
+  --sp:4px; --r:3px;
+  --disp:'Archivo',system-ui,sans-serif;
+  --body:'Source Serif 4',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px 96px}
+
+/* ---------- masthead ---------- */
+header.mast{border-bottom:2px solid var(--ink);margin-bottom:0}
+.mast-in{max-width:1120px;margin:0 auto;padding:20px 20px 14px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.brand{font-family:var(--disp);font-weight:700;font-size:30px;
+  letter-spacing:-.02em;line-height:1;margin:0}
+.brand span{color:var(--orange)}
+.brand-sub{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:6px}
+.mast-spacer{flex:1}
+.tally{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-2);text-align:right;line-height:1.7}
+.tally b{font-size:15px;letter-spacing:0}
+
+/* ---------- bank tabs ---------- */
+nav.banks{border-bottom:1px solid var(--rule);background:var(--card)}
+.banks-in{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;
+  gap:0;overflow-x:auto;scrollbar-width:none}
+.banks-in::-webkit-scrollbar{display:none}
+.bank-tab{appearance:none;max-width:340px;background:none;border:0;border-bottom:3px solid transparent;
+  font-family:var(--disp);font-weight:600;font-size:13.5px;letter-spacing:.02em;
+  color:var(--ink-3);padding:14px 18px;cursor:pointer;white-space:nowrap;
+  display:flex;align-items:baseline;gap:8px}
+.bank-tab .ref{font-family:var(--mono);font-size:12px}
+.bank-tab:hover{color:var(--ink)}
+.bank-tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--orange)}
+.bank-tab:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+
+/* ---------- mode switch ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  padding:18px 0 14px;border-bottom:1px solid var(--rule);margin-bottom:22px}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:var(--r);overflow:hidden}
+.seg button{appearance:none;background:var(--card);border:0;cursor:pointer;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 15px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--rule-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.seg button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.tb-note{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
+.tb-spacer{flex:1}
+
+/* ---------- layout: spine + main ---------- */
+.stage{display:grid;grid-template-columns:132px minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:820px){.stage{grid-template-columns:1fr;gap:0}}
+
+/* ---------- SIGNATURE: the layer spine ----------
+   Module 1 is stacks: the OSI's 7 layers and CompTIA's 7
+   troubleshooting steps. The spine keeps the whole stack on
+   screen and lights the band the current question sits on, so
+   a layer question is always read against its neighbours. */
+.spine{position:sticky;top:14px}
+.spine-cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;
+  padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.spine-bands{display:flex;flex-direction:column;gap:3px}
+.band{border-left:4px solid var(--rule-2);background:var(--card);
+  padding:8px 10px;min-height:42px;transition:background .18s,border-color .18s,transform .18s}
+.band .bnum{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  color:var(--ink-3);margin-bottom:2px}
+.band .bname{font-family:var(--disp);font-weight:600;font-size:12px;
+  line-height:1.25;color:var(--ink-2)}
+.band.lit{background:var(--ink);border-left-color:var(--orange);transform:translateX(3px)}
+.band.lit .bname{color:#fff}
+.band.lit .bnum{color:var(--orange)}
+.spine-empty{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  line-height:1.6;border-left:4px solid var(--rule);padding:10px 12px;background:var(--card)}
+@media(max-width:820px){
+  .spine{position:static;margin-bottom:20px;overflow-x:auto}
+  .spine-bands{display:flex;flex-direction:row;gap:3px;min-width:min-content}
+  .band{flex:0 0 auto;width:auto!important;min-height:0!important;
+    padding:7px 10px!important;white-space:nowrap}
+  .band .bnum{margin-bottom:0!important}
+}
+
+/* ---------- question card ---------- */
+.qcard{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  margin-bottom:20px;overflow:hidden}
+.qhead{padding:16px 20px 14px;border-bottom:1px solid var(--rule);
+  display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+.qno{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.01em}
+.qtitle{font-family:var(--disp);font-weight:500;font-size:14px;color:var(--ink-2);flex:1;min-width:180px}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 7px;border:1px solid var(--rule-2);border-radius:2px;color:var(--ink-2);background:var(--sunk)}
+.chip.t-multi{border-color:var(--blue);color:var(--blue)}
+.chip.t-order{border-color:var(--green);color:var(--green)}
+.chip.t-match{border-color:var(--brown);color:var(--brown)}
+.qbody{padding:18px 20px 20px}
+.stem{font-size:17px;line-height:1.6;margin:0 0 18px}
+
+/* ---------- options ---------- */
+.opts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;background:var(--paper);
+  border:1px solid var(--rule);border-radius:var(--r);cursor:pointer;text-align:left;
+  font-family:var(--body);font-size:15.5px;line-height:1.45;color:var(--ink);width:100%}
+.opt:hover:not(.locked){border-color:var(--rule-2);background:var(--sunk)}
+.opt:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.opt .k{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--ink-3);
+  flex:0 0 auto;width:17px;padding-top:1px}
+.opt.sel{border-color:var(--ink);background:var(--sunk)}
+.opt.sel .k{color:var(--ink)}
+.opt.right{border-color:var(--ok);background:#E6F0E9}
+.opt.right .k{color:var(--ok)}
+.opt.wrong{border-color:var(--no);background:#F5E6E4}
+.opt.wrong .k{color:var(--no)}
+.opt.locked{cursor:default}
+.opt .mk{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:600;flex:0 0 auto}
+.opt.right .mk{color:var(--ok)}
+.opt.wrong .mk{color:var(--no)}
+
+/* ---------- order + match ---------- */
+.pool{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.pool-cap,.slots-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.chipbtn{appearance:none;font-family:var(--body);font-size:14.5px;text-align:left;
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--r);
+  padding:8px 11px;cursor:pointer;color:var(--ink);line-height:1.35}
+.chipbtn:hover:not(:disabled){border-color:var(--ink);background:var(--sunk)}
+.chipbtn:disabled{opacity:.32;cursor:default}
+.chipbtn:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{display:flex;gap:11px;align-items:center;background:var(--paper);
+  border:1px solid var(--rule);border-radius:var(--r);padding:9px 12px;min-height:46px}
+.slot .sn{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);
+  flex:0 0 auto;width:60px}
+.slot .sv{flex:1;font-size:15px;line-height:1.4}
+.slot .sv.empty{color:var(--ink-3);font-family:var(--mono);font-size:12.5px}
+.slot button.clear{appearance:none;background:none;border:0;cursor:pointer;
+  font-family:var(--mono);font-size:15px;color:var(--ink-3);padding:2px 6px;line-height:1}
+.slot button.clear:hover{color:var(--flag)}
+.slot.right{border-color:var(--ok);background:#E6F0E9}
+.slot.wrong{border-color:var(--no);background:#F5E6E4}
+.slot .fix{font-family:var(--mono);font-size:11.5px;color:var(--no);margin-top:3px;display:block}
+.mrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--paper);
+  border:1px solid var(--rule);border-radius:var(--r);padding:9px 12px;margin-bottom:6px}
+.mrow .ml{flex:0 0 auto;min-width:150px;font-size:15px;font-weight:600}
+.mrow select{font-family:var(--mono);font-size:13px;padding:6px 8px;border:1px solid var(--rule-2);
+  border-radius:2px;background:var(--card);color:var(--ink);flex:1;min-width:150px}
+.mrow select:focus-visible{outline:2px solid var(--blue)}
+.mrow.right{border-color:var(--ok);background:#E6F0E9}
+.mrow.wrong{border-color:var(--no);background:#F5E6E4}
+
+/* ---------- actions ---------- */
+.acts{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:18px;
+  padding-top:16px;border-top:1px solid var(--rule)}
+.btn{appearance:none;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;padding:10px 17px;border-radius:var(--r);cursor:pointer;
+  border:1px solid var(--ink);background:var(--ink);color:var(--card)}
+.btn:hover:not(:disabled){background:var(--ink-2);border-color:var(--ink-2)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--rule-2)}
+.btn.ghost:hover:not(:disabled){background:var(--sunk);border-color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.verdict{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:.02em}
+.verdict.y{color:var(--ok)} .verdict.n{color:var(--no)}
+
+/* ---------- confidence ---------- */
+.conf{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:14px}
+.conf-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+.cbtn{appearance:none;width:31px;height:31px;border:1px solid var(--rule-2);
+  background:var(--paper);border-radius:var(--r);cursor:pointer;
+  font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink-2);line-height:1}
+.cbtn:hover{border-color:var(--ink)}
+.cbtn[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.cbtn:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+
+/* ---------- guide accordion ---------- */
+.guide{border-top:1px solid var(--rule);background:var(--paper)}
+.gsec{border-bottom:1px solid var(--rule)}
+.gsec:last-child{border-bottom:0}
+.gsum{appearance:none;width:100%;display:flex;gap:12px;align-items:baseline;
+  background:none;border:0;cursor:pointer;text-align:left;padding:13px 20px;
+  font-family:var(--disp);font-weight:600;font-size:13px;color:var(--ink);letter-spacing:.01em}
+.gsum:hover{background:var(--sunk)}
+.gsum:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.gsum .gn{font-family:var(--mono);font-size:11px;color:var(--orange);flex:0 0 auto;width:20px}
+.gsum .caret{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  transition:transform .18s}
+.gsec.open .caret{transform:rotate(90deg)}
+.gbody{padding:0 20px 18px 52px;font-size:15.5px;line-height:1.62;display:none}
+.gsec.open .gbody{display:block}
+@media(max-width:600px){.gbody{padding:0 16px 18px 20px}}
+.gbody ul,.gbody ol{margin:0 0 11px;padding-left:20px}
+.gbody li{margin-bottom:6px}
+.gbody li:last-child{margin-bottom:0}
+.gbody ul ul,.gbody ol ol,.gbody ul ol,.gbody ol ul{margin:6px 0 0}
+.gbody p{margin:0 0 11px}
+.gbody p:last-child{margin-bottom:0}
+.gbody strong{font-weight:600}
+.gbody em{font-style:italic;color:var(--ink-2)}
+.gbody pre{font-family:var(--mono);font-size:11.5px;line-height:1.45;background:var(--ink);
+  color:#DCE2E6;padding:13px 15px;border-radius:var(--r);overflow-x:auto;margin:0 0 12px;
+  white-space:pre;-webkit-overflow-scrolling:touch}
+.gbody pre strong{color:#fff;font-weight:600}
+.gbody table{border-collapse:collapse;width:100%;font-size:13px;margin:0 0 12px;
+  font-family:var(--disp);display:block;overflow-x:auto;white-space:nowrap}
+.gbody th{background:var(--ink);color:var(--card);font-weight:600;text-align:left;
+  padding:8px 10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.gbody td{border-bottom:1px solid var(--rule);padding:8px 10px;vertical-align:top}
+.gbody tr:nth-child(even) td{background:var(--card)}
+.gbody img{vertical-align:middle;max-width:100%}
+.gbody img.geq{height:1.15em;vertical-align:-.18em;margin:0 1px}
+.gbody img.gfig{display:block;margin:10px 0;border:1px solid var(--rule);
+  background:#fff;padding:6px;border-radius:var(--r)}
+.gbody pre img{filter:invert(1) brightness(1.7)}
+
+/* ---------- study mode extras ---------- */
+.modblock{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+  padding:20px;margin-bottom:20px}
+.modblock h2{font-family:var(--disp);font-weight:700;font-size:15px;margin:0 0 14px;
+  letter-spacing:.01em;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.modblock .gbody{padding:0;display:block}
+
+/* ---------- results ---------- */
+.result{background:var(--ink);color:var(--card);border-radius:var(--r);padding:24px;margin-bottom:20px}
+.result h2{font-family:var(--disp);font-weight:700;font-size:22px;margin:0 0 6px}
+.result .big{font-family:var(--mono);font-size:44px;font-weight:600;line-height:1;margin:14px 0 4px}
+.result .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--rule-2)}
+.result ul{margin:16px 0 0;padding-left:18px;font-size:14.5px}
+.result li{margin-bottom:5px}
+.result a{color:var(--orange)}
+
+/* ---------- misc ---------- */
+.fatal{background:#F5E6E4;border:1px solid var(--no);border-radius:var(--r);
+  padding:22px;margin:32px 0}
+.fatal h2{font-family:var(--disp);font-size:16px;margin:0 0 8px;color:var(--no)}
+.fatal code{font-family:var(--mono);font-size:13px;background:var(--card);padding:2px 5px;border-radius:2px}
+.foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.8;letter-spacing:.03em}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-in">
+    <div>
+      <h1 class="brand">net<span>Plus</span></h1>
+      <div class="brand-sub">CompTIA Network+ N10-009 · Module 1</div>
+    </div>
+    <div class="mast-spacer"></div>
+    <div class="tally" id="tally"></div>
+  </div>
+</header>
+
+<nav class="banks"><div class="banks-in" id="tabs" role="tablist"></div></nav>
+
+<div class="wrap">
+  <div id="boot"></div>
+  <div id="app" hidden>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Mode">
+        <button id="mQuiz"  aria-pressed="true">Quiz</button>
+        <button id="mStudy" aria-pressed="false">Study</button>
+      </div>
+      <span class="tb-note" id="posNote"></span>
+      <div class="tb-spacer"></div>
+      <button class="btn ghost" id="resetBank">Reset bank</button>
+    </div>
+    <div class="stage">
+      <aside class="spine" id="spine"></aside>
+      <main id="main"></main>
+    </div>
+    <div class="foot" id="foot"></div>
+  </div>
+</div>
+
+<script src="netplus_guides_module1.js"></script>
+<script>
+/* ============================================================
+   netPlus  ·  APP_VERSION 0.3.1
+   ------------------------------------------------------------
+   CHANGELOG
+   0.3.1  Bank 1.1.8 added — 50 questions across four banks.
+          Two of its questions independently confirmed the Module
+          Quiz duplicate mapping recorded in session 1.
+   0.3.0  First shell built against David's own study guides.
+          Renders all four question types (single, multi, match,
+          order). Ten-section guide accordion wired to the parsed
+          content. Layer spine added. Confidence symbols wired.
+          Known gaps: progress is in-memory only (no persistence
+          layer yet, D-10 undecided); banks 1.1.8 and 1.5 not
+          loaded; domain tagging and Messer links not wired.
+   ============================================================ */
+const APP_VERSION = '0.3.1';
+
+/* ---- boot guard: the content file is a separate download ---- */
+if (typeof NETPLUS_GUIDES === 'undefined') {
+  document.getElementById('boot').innerHTML =
+    '<div class="fatal"><h2>Content file not found</h2>' +
+    '<p>This page loads its questions from <code>netplus_guides_module1.js</code>. ' +
+    'Put that file in the same folder as this one and reload.</p></div>';
+} else {
+  boot();
+}
+
+function boot(){
+document.getElementById('app').hidden = false;
+
+const REFS = Object.keys(NETPLUS_GUIDES);
+const CONF = ['+','/','?','\u2212','!','S','R','W'];
+const CONF_LABEL = {
+  '+':'Knew it cold','/':'Got there, slowly','?':'Guessed','\u2212':'Missed it',
+  '!':'Careless slip','S':'Silly misread','R':'Needs review','W':'Wrong for a reason I get'
+};
+const SECTIONS = [
+  ['q','The question and options'], ['ca','Correct answer'],
+  ['wc',"Why it's correct"],        ['ml','Mini lesson: technicals behind the question'],
+  ['wa','Analysis of incorrect answers'], ['gl','Plain English glossary'],
+  ['rl','Real-life scenario example'],    ['mp','The metaphor example'],
+  ['mn','Mnemonics and memorization tricks'], ['ck','Student checklist']
+];
+
+const OSI = [
+  [7,'Application'],[6,'Presentation'],[5,'Session'],
+  [4,'Transport'],[3,'Network'],[2,'Data Link'],[1,'Physical']
+];
+const STEPS = [
+  [1,'Identify the problem'],[2,'Establish a theory'],[3,'Test the theory'],
+  [4,'Plan of action'],[5,'Implement or escalate'],[6,'Verify functionality'],
+  [7,'Document findings']
+];
+
+/* ---- state (in memory only for now) ---- */
+const S = { ref: REFS[0], mode:'quiz', i:0, ans:{}, done:{}, conf:{} };
+const kk = (r,n) => r + ':' + n;
+
+const el = id => document.getElementById(id);
+const bank = () => NETPLUS_GUIDES[S.ref];
+const qs   = () => bank().questions;
+const cur  = () => qs()[S.i];
+
+/* ============================================================
+   Spine — which stack does this bank live on, and which band
+   does the current question sit on?
+   ============================================================ */
+function spineFor(ref){
+  if (ref === '1.4.11') return {cap:'Troubleshooting steps', rows:STEPS, pre:'Step '};
+  if (ref === '1.2.9')  return {cap:'OSI layers',            rows:OSI,   pre:'L'};
+  return null;
+}
+function litBand(q){
+  if (!q) return null;
+  const hay = (q.title + ' ' + q.stem + ' ' + q.ca).toLowerCase();
+  if (S.ref === '1.4.11'){
+    for (const [n,name] of STEPS){
+      const w = name.toLowerCase().split(' ').slice(-1)[0];
+      if (new RegExp('step ' + n + '\\b').test(hay)) return n;
+      if (hay.indexOf(w) > -1 && w.length > 4) return n;
+    }
+    return null;
+  }
+  for (const [n,name] of OSI){
+    if (hay.indexOf(name.toLowerCase()) > -1) return n;
+    if (new RegExp('layer ' + n + '\\b|\\bl' + n + '\\b').test(hay)) return n;
+  }
+  return null;
+}
+function drawSpine(){
+  const cfg = spineFor(S.ref), box = el('spine');
+  if (!cfg){
+    box.innerHTML = '<div class="spine-cap">Bank</div>' +
+      '<div class="spine-empty">' + S.ref + '<br>' + qs().length + ' questions<br><br>' +
+      'No single stack runs through this bank.</div>';
+    return;
+  }
+  const lit = S.mode === 'quiz' ? litBand(cur()) : null;
+  box.innerHTML = '<div class="spine-cap">' + cfg.cap + '</div><div class="spine-bands">' +
+    cfg.rows.map(([n,name]) =>
+      '<div class="band' + (n === lit ? ' lit' : '') + '">' +
+        '<div class="bnum">' + cfg.pre + n + '</div>' +
+        '<div class="bname">' + name + '</div></div>').join('') + '</div>';
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+function esc(s){ return String(s).replace(/[&<>"]/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function typeChip(t){
+  const m = {single:'Single answer', multi:'Select all that apply',
+             order:'Put in order', match:'Match the pairs'};
+  return '<span class="chip t-' + t + '">' + m[t] + '</span>';
+}
+
+function guideHtml(q, openFirst){
+  return '<div class="guide">' + SECTIONS.map(([k,label],idx) =>
+    '<div class="gsec' + (openFirst && idx === 2 ? ' open' : '') + '">' +
+      '<button class="gsum" data-acc>' +
+        '<span class="gn">' + (idx+1) + '</span>' +
+        '<span>' + label + '</span>' +
+        '<span class="caret">\u203A</span></button>' +
+      '<div class="gbody">' + (q[k] || '') + '</div></div>').join('') + '</div>';
+}
+
+/* ---- answer bodies, one per type ---- */
+function bodySingle(q, a, locked){
+  return '<ul class="opts">' + q.opts.map(o => {
+    const sel = a && a.indexOf(o.k) > -1;
+    const isRight = q.correct.indexOf(o.k) > -1;
+    let cls = 'opt', mk = '';
+    if (locked){
+      cls += ' locked';
+      if (isRight){ cls += ' right'; mk = sel ? '\u2713' : '\u2190'; }
+      else if (sel){ cls += ' wrong'; mk = '\u2715'; }
+    } else if (sel) cls += ' sel';
+    return '<li><button class="' + cls + '" data-opt="' + o.k + '"' +
+      (locked ? ' disabled' : '') + '>' +
+      '<span class="k">' + o.k + '</span><span>' + o.t + '</span>' +
+      (mk ? '<span class="mk">' + mk + '</span>' : '') + '</button></li>';
+  }).join('') + '</ul>';
+}
+
+function bodyOrder(q, a, locked){
+  const placed = a || [];
+  const pool = q.order.pool.map((t,i) =>
+    '<button class="chipbtn" data-pool="' + i + '"' +
+    ((placed.indexOf(t) > -1 || locked) ? ' disabled' : '') + '>' + esc(t) + '</button>').join('');
+  const slots = q.order.slots.map((s,i) => {
+    const v = placed[i];
+    let cls = 'slot', fix = '';
+    if (locked && v){
+      const good = v === q.order.answer[i];
+      cls += good ? ' right' : ' wrong';
+      if (!good) fix = '<span class="fix">\u2192 ' + esc(q.order.answer[i]) + '</span>';
+    }
+    return '<div class="' + cls + '">' +
+      '<span class="sn">' + esc(s) + '</span>' +
+      '<span class="sv' + (v ? '' : ' empty') + '">' + (v ? esc(v) + fix : 'empty') + '</span>' +
+      (v && !locked ? '<button class="clear" data-clear="' + i + '" aria-label="Clear ' + esc(s) + '">\u00D7</button>' : '') +
+      '</div>';
+  }).join('');
+  return '<div class="pool-cap">Tasks \u2014 tap to place in the next empty step</div>' +
+         '<div class="pool">' + pool + '</div>' +
+         '<div class="slots-cap">Sequence</div><div class="slots">' + slots + '</div>';
+}
+
+function bodyMatch(q, a, locked){
+  const chosen = a || {};
+  return q.match.left.map((L,i) => {
+    const want = (q.match.pairs.find(p => p[0] === L) || [])[1];
+    let cls = 'mrow';
+    if (locked) cls += (chosen[L] === want) ? ' right' : ' wrong';
+    return '<div class="' + cls + '">' +
+      '<span class="ml">' + esc(L) + '</span>' +
+      '<select data-match="' + esc(L) + '"' + (locked ? ' disabled' : '') + '>' +
+        '<option value="">\u2014 choose \u2014</option>' +
+        q.match.right.map(R => '<option' + (chosen[L] === R ? ' selected' : '') +
+          '>' + esc(R) + '</option>').join('') +
+      '</select>' +
+      (locked && chosen[L] !== want ? '<span class="fix">\u2192 ' + esc(want) + '</span>' : '') +
+      '</div>';
+  }).join('');
+}
+
+/* ---- grading ---- */
+function graded(q, a){
+  if (!a) return false;
+  if (q.type === 'order')
+    return q.order.answer.every((t,i) => a[i] === t);
+  if (q.type === 'match')
+    return q.match.pairs.every(([L,R]) => a[L] === R);
+  return a.length === q.correct.length && q.correct.every(k => a.indexOf(k) > -1);
+}
+function complete(q, a){
+  if (!a) return false;
+  if (q.type === 'order') return a.filter(Boolean).length === q.order.slots.length;
+  if (q.type === 'match') return q.match.left.every(L => a[L]);
+  return a.length > 0;
+}
+
+/* ---- quiz view ---- */
+function drawQuiz(){
+  const q = cur(), k = kk(S.ref, q.n);
+  const a = S.ans[k], locked = !!S.done[k];
+  const body = q.type === 'order' ? bodyOrder(q,a,locked)
+             : q.type === 'match' ? bodyMatch(q,a,locked)
+             : bodySingle(q,a,locked);
+
+  let acts = '<div class="acts">';
+  if (!locked){
+    acts += '<button class="btn" id="check"' + (complete(q,a) ? '' : ' disabled') + '>Check answer</button>';
+  } else {
+    const win = graded(q,a);
+    acts += '<span class="verdict ' + (win ? 'y' : 'n') + '">' +
+            (win ? 'Correct' : 'Not quite') + '</span>';
+  }
+  acts += '<div class="tb-spacer"></div>';
+  acts += '<button class="btn ghost" id="prev"' + (S.i === 0 ? ' disabled' : '') + '>\u2190 Prev</button>';
+  acts += '<button class="btn ghost" id="next"' + (S.i === qs().length-1 ? ' disabled' : '') + '>Next \u2192</button>';
+  acts += '</div>';
+
+  let conf = '';
+  if (locked){
+    conf = '<div class="conf"><span class="conf-cap">How did that go</span>' +
+      CONF.map(c => '<button class="cbtn" data-conf="' + c + '" title="' + CONF_LABEL[c] +
+        '" aria-label="' + CONF_LABEL[c] + '"' +
+        (S.conf[k] === c ? ' aria-pressed="true"' : ' aria-pressed="false"') +
+        '>' + c + '</button>').join('') + '</div>';
+  }
+
+  el('main').innerHTML =
+    '<article class="qcard">' +
+      '<div class="qhead"><span class="qno">Q' + q.n + '</span>' +
+        '<span class="qtitle">' + esc(q.title) + '</span>' + typeChip(q.type) + '</div>' +
+      '<div class="qbody"><p class="stem">' + q.stem + '</p>' + body + acts + conf + '</div>' +
+      (locked ? guideHtml(q, true) : '') +
+    '</article>';
+
+  if (locked && typeof hydrateGuideImages === 'function') hydrateGuideImages(el('main'));
+  wireQuiz(q, k, locked);
+  el('posNote').textContent = 'Question ' + (S.i+1) + ' of ' + qs().length;
+  drawSpine(); drawTally();
+}
+
+function wireQuiz(q, k, locked){
+  const m = el('main');
+  m.querySelectorAll('[data-acc]').forEach(b =>
+    b.onclick = () => b.parentElement.classList.toggle('open'));
+
+  if (!locked){
+    m.querySelectorAll('[data-opt]').forEach(b => b.onclick = () => {
+      const key = b.dataset.opt;
+      let a = S.ans[k] || [];
+      if (q.type === 'multi'){
+        a = a.indexOf(key) > -1 ? a.filter(x => x !== key) : a.concat(key);
+      } else a = [key];
+      S.ans[k] = a; drawQuiz();
+    });
+    m.querySelectorAll('[data-pool]').forEach(b => b.onclick = () => {
+      const t = q.order.pool[+b.dataset.pool];
+      const a = (S.ans[k] || []).slice();
+      for (let i = 0; i < q.order.slots.length; i++){
+        if (!a[i]){ a[i] = t; break; }
+      }
+      S.ans[k] = a; drawQuiz();
+    });
+    m.querySelectorAll('[data-clear]').forEach(b => b.onclick = () => {
+      const a = (S.ans[k] || []).slice();
+      a[+b.dataset.clear] = undefined;
+      S.ans[k] = a; drawQuiz();
+    });
+    m.querySelectorAll('[data-match]').forEach(sel => sel.onchange = () => {
+      const a = Object.assign({}, S.ans[k] || {});
+      a[sel.dataset.match] = sel.value;
+      S.ans[k] = a; drawQuiz();
+    });
+    const c = el('check');
+    if (c) c.onclick = () => { S.done[k] = true; drawQuiz(); window.scrollTo({top:0,behavior:'smooth'}); };
+  }
+
+  m.querySelectorAll('[data-conf]').forEach(b => b.onclick = () => {
+    S.conf[k] = (S.conf[k] === b.dataset.conf) ? null : b.dataset.conf; drawQuiz();
+  });
+  const p = el('prev'), n = el('next');
+  if (p) p.onclick = () => { S.i--; drawQuiz(); window.scrollTo({top:0}); };
+  if (n) n.onclick = () => { S.i++; drawQuiz(); window.scrollTo({top:0}); };
+}
+
+/* ---- study view ---- */
+function drawStudy(){
+  const b = bank();
+  let h = '<div class="modblock"><h2>' + esc(b.title) + '</h2>' +
+          '<div class="gbody">' + b.summary + '</div></div>';
+  h += qs().map(q =>
+    '<article class="qcard">' +
+      '<div class="qhead"><span class="qno">Q' + q.n + '</span>' +
+        '<span class="qtitle">' + esc(q.title) + '</span>' + typeChip(q.type) + '</div>' +
+      '<div class="qbody"><p class="stem">' + q.stem + '</p></div>' +
+      guideHtml(q, false) + '</article>').join('');
+  h += '<div class="modblock"><h2>Module student master checklist</h2>' +
+       '<div class="gbody">' + b.checklist + '</div></div>';
+  el('main').innerHTML = h;
+  el('main').querySelectorAll('[data-acc]').forEach(bt =>
+    bt.onclick = () => bt.parentElement.classList.toggle('open'));
+  if (typeof hydrateGuideImages === 'function') hydrateGuideImages(el('main'));
+  el('posNote').textContent = qs().length + ' questions \u00B7 all sections collapsed';
+  drawSpine(); drawTally();
+}
+
+/* ---- chrome ---- */
+function drawTabs(){
+  el('tabs').innerHTML = REFS.map(r =>
+    '<button class="bank-tab" role="tab" data-ref="' + r + '" ' +
+    'aria-selected="' + (r === S.ref) + '">' +
+    '<span class="ref">' + r + '</span>' +
+    '<span>' + shortTitle(NETPLUS_GUIDES[r].title) + '</span></button>').join('');
+  el('tabs').querySelectorAll('[data-ref]').forEach(b => b.onclick = () => {
+    S.ref = b.dataset.ref; S.i = 0; draw();
+  });
+}
+function shortTitle(t){
+  const c = t.indexOf(':');
+  let s = (c > -1 ? t.slice(c+1) : t).trim();
+  // titles list every sub-topic; the first clause names the bank well enough
+  s = s.split(/,| and /)[0].trim();
+  return s.length > 30 ? s.slice(0,29).trim() + '\u2026' : s;
+}
+function drawTally(){
+  let done = 0, right = 0, total = 0;
+  REFS.forEach(r => NETPLUS_GUIDES[r].questions.forEach(q => {
+    total++;
+    const k = kk(r,q.n);
+    if (S.done[k]){ done++; if (graded(q, S.ans[k])) right++; }
+  }));
+  el('tally').innerHTML = done
+    ? '<b>' + right + '/' + done + '</b> correct<br>' + done + ' of ' + total + ' answered'
+    : total + ' questions loaded<br>across ' + REFS.length + ' banks';
+}
+function drawFoot(){
+  const n = REFS.reduce((s,r) => s + NETPLUS_GUIDES[r].questions.length, 0);
+  el('foot').innerHTML =
+    'netPlus v' + APP_VERSION + ' \u00B7 ' + n + ' questions \u00B7 banks ' + REFS.join(', ') + '<br>' +
+    'Study guide text is David Sepulveda\u2019s own, reproduced verbatim.<br>' +
+    'Progress is held in memory only \u2014 reloading clears it.';
+}
+function draw(){
+  drawTabs();
+  el('mQuiz').setAttribute('aria-pressed', S.mode === 'quiz');
+  el('mStudy').setAttribute('aria-pressed', S.mode === 'study');
+  (S.mode === 'quiz' ? drawQuiz : drawStudy)();
+}
+
+el('mQuiz').onclick  = () => { S.mode = 'quiz';  draw(); };
+el('mStudy').onclick = () => { S.mode = 'study'; draw(); };
+el('resetBank').onclick = () => {
+  qs().forEach(q => { const k = kk(S.ref,q.n);
+    delete S.ans[k]; delete S.done[k]; delete S.conf[k]; });
+  S.i = 0; draw();
+};
+document.addEventListener('keydown', e => {
+  if (S.mode !== 'quiz' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowLeft'  && S.i > 0){ S.i--; draw(); }
+  if (e.key === 'ArrowRight' && S.i < qs().length-1){ S.i++; draw(); }
+});
+
+drawFoot(); draw();
+}
+</script>
+</body>
+</html>
