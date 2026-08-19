@@ -11,8 +11,10 @@ const ok = (label, cond, detail) => {
   console.log((cond ? '  ok   ' : '  FAIL ') + label + (detail ? '  [' + detail + ']' : ''));
 };
 
-const html = fs.readFileSync('netplus_app.html', 'utf8');
-const content = fs.readFileSync('netplus_guides_module1.js', 'utf8');
+const path = require('path');
+const ROOT = path.join(__dirname, '..');
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const content = fs.readFileSync(path.join(ROOT, 'netplus_guides_module1.js'), 'utf8');
 
 // inline the content script so jsdom doesn't need to fetch it
 const wired = html.replace(
@@ -26,7 +28,7 @@ const { window } = dom;
 
 // The content file declares `const NETPLUS_GUIDES`, which is a lexical
 // binding rather than a window property. Load it directly for assertions.
-const G = require('./netplus_guides_module1.js').NETPLUS_GUIDES;
+const G = require('../netplus_guides_module1.js').NETPLUS_GUIDES;
 const doc = window.document;
 const $ = s => doc.querySelector(s);
 const $$ = s => [...doc.querySelectorAll(s)];

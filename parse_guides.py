@@ -11,12 +11,15 @@ VERBATIM. This script only changes markup, never wording:
   - preserves embedded equation/arrow images as deduped data URIs
   - preserves ASCII-art diagrams inside <pre>
 
-Output: netplus_guides_module1.js
+Run from anywhere:  python3 src/parse_guides.py
+Reads:  guides/*.md      Writes: netplus_guides_module1.js
 """
 
 import re, json, base64, hashlib, os, sys
 
-SRC = "/mnt/user-data/uploads"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, "guides")
+OUT = os.path.join(ROOT, "netplus_guides_module1.js")
 FILES = [
     ("1.1.8",  "118",  "CompTIA_Network__Module_1_1_8_Complete_Study_Guide.md"),
     ("1.2.9",  "129",  "CompTIA_Network__Module_1_2_9_Complete_Study_Guide.md"),
@@ -372,7 +375,7 @@ function hydrateGuideImages(root){
 if (typeof module !== 'undefined') module.exports =
   { NETPLUS_GUIDES: NETPLUS_GUIDES, NETPLUS_GUIDE_IMAGES: NETPLUS_GUIDE_IMAGES };""")
 
-open("/home/claude/netplus_guides_module1.js", "w", encoding="utf-8").write("\n".join(js))
+open(OUT, "w", encoding="utf-8").write("\n".join(js))
 
 # ---------------------------------------------------------------- report
 
@@ -385,7 +388,7 @@ for ref in guides:
     print(f"   summary table: {'yes' if g['summary'] else 'NO'}   "
           f"master checklist: {'yes' if g['checklist'] else 'NO'}")
 print(f"\nunique images: {len(IMAGES)}  (aliases: {len(IMG_ALIAS)})")
-print(f"output bytes: {os.path.getsize('/home/claude/netplus_guides_module1.js'):,}")
+print(f"output bytes: {os.path.getsize(OUT):,}")
 if report:
     print("\nISSUES:")
     for r in report:

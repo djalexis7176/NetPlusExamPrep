@@ -1,7 +1,7 @@
 // Verification for netplus_guides_module1.js
 // Specific numeric and content assertions, not smoke tests.
 
-const { NETPLUS_GUIDES: G, NETPLUS_GUIDE_IMAGES: IMG } = require('./netplus_guides_module1.js');
+const { NETPLUS_GUIDES: G, NETPLUS_GUIDE_IMAGES: IMG } = require('../netplus_guides_module1.js');
 
 let fail = 0;
 const ok = (label, cond, detail) => {

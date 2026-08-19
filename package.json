@@ -1,0 +1,19 @@
+{
+  "name": "netplus",
+  "version": "0.3.1",
+  "private": true,
+  "description": "CompTIA Network+ N10-009 study and quiz app, built on hand-written per-question study guides.",
+  "scripts": {
+    "build": "python3 src/parse_guides.py",
+    "test": "npm run test:content && npm run test:app",
+    "test:content": "node test/verify_guides.js",
+    "test:app": "node test/test_app.js",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
